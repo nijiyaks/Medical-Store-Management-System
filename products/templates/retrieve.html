@@ -1,0 +1,292 @@
+{%extends 'layout/app-layout.html'%}
+{%block 'content' %}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <style>
+        body {
+            background-image: url("{% static 'pill-4897529_1920.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 40px;
+           /* overflow: hidden;*/
+           
+        }
+        
+
+        .table-container {
+            background: rgba(37, 35, 35, 0.215);
+            margin-top: -60px;
+            margin-bottom: -44px;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(219, 210, 210, 0.853);
+          
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            
+        }
+        .table th{
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #817575;
+        }
+        .table td {
+            padding: 20px;
+            color: white;
+            font-size: 110%;
+            text-align: left;
+            border-bottom: 1px solid #817575;
+        }
+        
+        .table th {
+            background-color: #104f5c;
+            font-weight: bold;
+          color: whitesmoke;
+        }
+        .table tr:hover {
+            background-color: #1b2121be;
+        }
+       
+a[value="edit"]{
+    color: black;
+    
+}
+h2{
+   text-align: center;
+   font-family: Arial, sans-serif;
+            font-size: 36px;
+            color: #ecbe33; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Shadow effect */
+            margin-top: -30px; /* Add some top margin */
+            text-shadow: 1px 1px 2px black, 0 0 25px rgb(104, 104, 138), 0 0 5px rgb(4, 152, 115);
+}
+.table-wrapper::-webkit-scrollbar {
+    width: 0px; /* Make scrollbar invisible */
+    background: transparent; /* Optional: Set a transparent background */
+}
+
+/* Optional: Add styling to the table wrapper */
+.table-wrapper {
+    height: 400px; /* Set the desired height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+div.containerr
+{
+    font-family: Raleway;
+    
+	padding: 130px;
+  color: rgb(251, 251, 251);
+	text-align: right;
+    margin-top: -250px;
+    margin-left: 29
+}
+a[id="updatebtn"]{
+        background-color: rgb(0, 0, 0);
+}
+a[id="updatebtn"]:hover{
+    color: rgb(20, 210, 210);
+}
+
+button.delete-btn{
+    background-color: #dc3333;
+}
+button.delete-btn:hover{
+    color: rgb(20, 210, 210);
+ 
+}
+span.btn{
+    background-color: #040b09;
+    color: white;
+}
+a.btn{
+    background-color: #040b09;
+}
+    </style>
+   
+
+
+</head>
+{% include 'partials/navbar.html' %}
+
+
+
+<div class="containerr red topBotomBordersOut">SEARCH
+<input type="text" id="search-input" placeholder="Enter product name...">
+    <div id="search-results"></div>
+</div>
+ 
+<script>
+  $(document).ready(function() {
+$('#search-input').keyup(function() {
+    var query = $(this).val();
+    $.ajax({
+        url: '{% url "search_products" %}',
+        method: 'GET',
+        data: {
+            'query': query
+        },
+        dataType: 'json',
+        success: function(data) {
+    // Clear existing table rows
+    $('#product-table tbody').empty();
+
+    // Append new rows for each product in the search results
+    $.each(data, function(index, product) {
+        var row = '<tr>' +
+            '<td>' + product.id + '</td>' +
+            '<td>' + product.name + '</td>' +
+            '<td>' + product.description + '</td>' +
+            '<td>' + product.time + '</td>' +
+            '<td>' + product.available_stock + '</td>' +
+            '<td><a href="' + "{% url 'updateproduct' 0 %}".replace('0', product.id) + '" id="updatebtn" class="btn btn-success" value="edit" type="submit">Edit</a></td>'+      
+             '<td><button data-toggle="modal" data-target="#myModal' + product.id + '" class="btn btn-danger delete-btn" id="delete" value="Delete">Delete</button></td>' +
+            '</tr>';
+            
+        $('#product-table tbody').append(row);
+    });
+},
+
+        error: function(xhr, errmsg, err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    });
+});
+
+}); 
+
+
+</script>
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="table-container">
+                <h2 class="mb-4">MEDICINE LIST</h2>
+                <div class="table-wrapper">
+                <table class="table" id="product-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Time</th>
+                            <th>Stock</th>
+                            <th colspan="2" style="text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+        
+                 
+    {% for product in page_obj %}   
+     <tr>      
+
+        <td>{{product.id}}</td>
+        <td>{{ product.name }} </td> 
+        <td>{{ product.description}}</td>
+        <td>{{ product.time }}</td>
+        <td>{{ product.available_stock }}</td>
+        <td> <a href="{%url 'updateproduct' product.id %}" id="updatebtn"  class="btn edit-btn "   type="submit">Edit</a></td>
+        <td><button data-toggle="modal" data-target="#myModal{{ product.id }}"  class="btn  delete-btn"  id="delete" >
+            Delete
+        </button> </td>
+    </tr>   
+        <div class="modal fade" id="myModal{{ product.id }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="deleteForm{{ product.id }}" method="post"  action="{% url 'deleteproduct' product.id %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h4 class="modal-title">Confirm Delete</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete "{{ product.name }}"?</p>
+                        </div>
+                       
+                        <div class="modal-footer">
+                            
+                              <button type="submit" value="edit" id="delete" type="submit" class="btn delete-btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                    
+       
+                </div>
+            </div>
+        </div>        </td></tr>
+            {%endfor%}
+    </table>
+</div>
+
+        <nav aria-label="Page navigation example" style="margin:auto;">
+                {% if page_obj.has_previous %}
+                        
+                        <a href="?page=1"class="btn btn-success">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-success" aria-label="previous">&laquo; prev</a>
+                {% endif %}
+        
+                {% for page_number in page_obj.paginator.get_elided_page_range %}
+                        {% if page_obj.number == page_number %}
+                                <span class="btn">{{ page_number }}</span>
+                        {% else %}
+                                <a href="?page={{ page_number }}" class="btn">{{ page_number }}</a>
+                        {% endif %}
+                {% endfor %}
+        
+                {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-success">next &raquo;</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-success">last &raquo;</a>
+                {% endif %}
+        </nav>
+
+
+    
+
+        
+
+ {%endblock%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

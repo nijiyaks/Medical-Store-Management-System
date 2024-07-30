@@ -1,0 +1,166 @@
+{%extends 'layout/app-layout.html'%}
+{%block 'content' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <style>
+        body {
+            background-image: url("{% static 'pill-4897529_1920.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 40px;
+            overflow: hidden;
+	  }
+      
+       .tcontainer{
+        background: rgba(255, 255, 255, 0.2);
+            margin-top: 60px;
+            margin-bottom: -44px;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+           
+       }
+       label.c{
+        
+    font-size:20px;
+    font-family: Arial, sans-serif;
+    color: #ecbe33; /* Green color */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Shadow effect */
+    text-shadow: 1px 1px 2px black, 0 0 25px rgb(104, 104, 138), 0 0 5px rgb(4, 152, 115);
+
+       }
+    h1{
+        text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 36px;
+            color: #ecbe33; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Shadow effect */
+            margin-top: -30px; /* Add some top margin */
+            text-shadow: 1px 1px 2px black, 0 0 25px rgb(104, 104, 138), 0 0 5px rgb(4, 152, 115);
+        }
+        div.containerr
+{
+    font-family: Raleway;
+    margin: 0 auto;
+	padding: 130px;
+  
+	text-align: right;
+    margin-top: -190px;
+    margin-left: 190px;
+}
+input.colr{
+    background-color:bisque;
+}
+textarea.form-control{
+    background-color: bisque;
+}
+div.containerr a
+{
+    color: #FFF;
+    text-decoration: none;
+    font: 20px Raleway;
+    margin: 0px 0px;
+    padding: 10px 10px;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+}
+
+
+div.topBotomBordersOut a:before, div.topBotomBordersOut a:after
+{
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height: 2px;
+    background: #FFF;
+    content: "";
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+div.topBotomBordersOut a:before
+{
+    top: 0px;
+    transform: translateY(10px);
+}
+
+div.topBotomBordersOut a:after
+{
+    bottom: 0px;
+    transform: translateY(-10px);
+}
+
+div.topBotomBordersOut a:hover:before, div.topBotomBordersOut a:hover:after
+{
+    opacity: 1;
+    transform: translateY(0px);
+}
+.logo img {
+    height: 40px; /* Adjust logo size */
+    margin-left: 10px;
+   
+}
+</style>
+</head>
+<body>
+    <div class="logo">
+        <img src="{% static 'pharmacy-logo.jpg' %}" alt="Pharmacy Logo">
+      </div>
+    <div class="containerr red topBotomBordersOut">
+        <a href="{% url 'page_list' %}">BACK</a> 
+    </div>
+<div class="container">
+    
+    <h1>ADD MEDICINE</h1>
+        <div class="row justify-content-center">
+           
+            <div class="col-md-6">
+                <div class="tcontainer">
+                <div class="login-form">
+
+
+
+<form action="" method="post">
+    {% csrf_token %}
+     <div class="form-group">
+    <label for="id_name"class="c">Name:</label>
+
+<input type="text" name="name" maxlength="500" class="form-control  colr" placeholder="Enter Medicine Name" required="" id="id_name">
+    
+</div>
+
+<div class="form-group">
+    <label for="id_description" class="c">Description:</label>
+
+<textarea name="description" cols="40" rows="1" class="form-control  colr" required=""  placeholder="Enter Medicine Category" id="id_description"></textarea>
+    
+</div>
+
+<div class="form-group">
+    <label for="id_available_stock" class="c">Available stock:</label>
+
+<input type="number" name="available_stock" value="0" required="" placeholder="Enter Medicine Stock" class="form-control colr" id="id_available_stock">
+     
+</div>
+    <input type="submit" value="submit" class="form-control btn-dark">
+    {% if error_message %}
+
+<p>{{ error_message }}</p>
+
+{% endif %}
+</form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
